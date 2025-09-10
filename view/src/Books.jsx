@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react'
 import './Books.css'
 
 const Books = () => {
+  const URL = "https://library-backend-seven.vercel.app"
+  const API_NAME = `${URL}/books`
+
+
   const [books, setBooks] = useState([]);
   const [form, setForm] = useState({ id: "", title: "", author: "" });
 
@@ -11,14 +15,14 @@ const Books = () => {
   }, []);
 
   async function fetchBooks() {
-    const res = await fetch('http://localhost:3000/books');
+    const res = await fetch(API_NAME);
     const json = await res.json();
     setBooks(json);
   }
 
   // add book
   async function handleAdd() {
-    await fetch('http://localhost:3000/books', {
+    await fetch(API_NAME, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: form.title, author: form.author })
@@ -35,7 +39,7 @@ const Books = () => {
   // update book
   async function handleUpdate() {
     if (!form.id) return;
-    await fetch(`http://localhost:3000/books/${form.id}`, {
+    await fetch(`${API_NAME}/${form.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: form.title, author: form.author })
@@ -47,7 +51,7 @@ const Books = () => {
   // delete book
   async function handleDelete() {
     if (!form.id) return;
-    await fetch(`http://localhost:3000/books/${form.id}`, {
+    await fetch(`${API_NAME}/${form.id}`, {
       method: "DELETE"
     });
     await fetchBooks();
