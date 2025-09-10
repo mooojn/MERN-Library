@@ -1,61 +1,49 @@
-import React, { useState, useEffect } from 'react'
-import './Books.css'
+import React, { useState, useEffect } from 'react';
+import BookList from './components/BookList.jsx';
+import BookForm from './components/BookForm.jsx';
+import { getBooks, addBook, updateBook, deleteBook } from './services/books';
 
-const Books = () => {
-  const URL = "https://library-backend-seven.vercel.app"
-  const API_NAME = `${URL}/books`
-
-
+const BooksPage = () => {
   const [books, setBooks] = useState([]);
   const [form, setForm] = useState({ id: "", title: "", author: "" });
+  const fieldNames = ["title", "author"];
 
-  // fetch all books
+  const formFields = fieldNames.map(n => ({
+    name: n,
+    label: n.toUpperCase()
+  }));
+
   useEffect(() => {
     fetchBooks();
   }, []);
 
   async function fetchBooks() {
-    const res = await fetch(API_NAME);
-    const json = await res.json();
-    setBooks(json);
+    const data = await getBooks();
+    setBooks(data);
   }
 
-  // add book
   async function handleAdd() {
-    await fetch(API_NAME, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: form.title, author: form.author })
-    });
+    await addBook({ title: form.title, author: form.author });
     await fetchBooks();
     resetForm();
   }
 
-  // fill inputs when editing
-  function handleEdit(book) {
-    setForm({ id: book._id, title: book.title, author: book.author });
-  }
-
-  // update book
   async function handleUpdate() {
     if (!form.id) return;
-    await fetch(`${API_NAME}/${form.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: form.title, author: form.author })
-    });
+    await updateBook(form.id, { title: form.title, author: form.author });
     await fetchBooks();
     resetForm();
   }
 
-  // delete book
   async function handleDelete() {
     if (!form.id) return;
-    await fetch(`${API_NAME}/${form.id}`, {
-      method: "DELETE"
-    });
+    await deleteBook(form.id);
     await fetchBooks();
     resetForm();
+  }
+
+  function handleEdit(book) {
+    setForm({ id: book._id, title: book.title, author: book.author });
   }
 
   function resetForm() {
@@ -64,41 +52,17 @@ const Books = () => {
 
   return (
     <>
-      <div className='book-cards'>
-        {books.map((book) =>
-          <div className='book-card' key={book._id} onClick={() => handleEdit(book)}>
-            <p>Author: {book.author}</p>
-            <h1>{book.title}</h1>
-            <button onClick={() => handleEdit(book)}>Edit</button>
-          </div>
-        )}
-      </div>
-
-      <div className="form">
-        <label>Title</label>
-        <input
-          type="text"
-          value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-        />
-
-        <label>Author</label>
-        <input
-          type="text"
-          value={form.author}
-          onChange={(e) => setForm({ ...form, author: e.target.value })}
-        />
-      </div>
-
-      <button onClick={handleAdd}>Add</button>
-      {form.id && (
-        <>
-          <button onClick={handleUpdate}>Update</button>
-          <button onClick={handleDelete}>Delete</button>
-        </>
-      )}
+      <BookList books={books} onEdit={handleEdit} />
+      <BookForm
+        form={form}
+        setForm={setForm}
+        formFields={formFields}
+        onAdd={handleAdd}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}
+      />
     </>
-  )
-}
+  );
+};
 
-export default Books
+export default BooksPage;
