@@ -3,20 +3,20 @@ import { getBooks, storeBook, updateBook, deleteBook } from "../mongoose.js";
 
 const router = express.Router();
 
-// router.get("/", async (req, res) => {
-//   const books = await getBooks();
-//   res.json(books);
-// });
-
 router.get("/", async (req, res) => {
-  try {
-    const books = await getBooks();
-    res.json(books);
-  } catch (err) {
-    console.error("❌ Error fetching books:", err);
-    res.status(500).json({ error: "Failed to fetch books" });
-  }
+  const books = await getBooks();
+  res.json(books);
 });
+
+// router.get("/", async (req, res) => {
+//   try {
+//     const books = await getBooks();
+//     res.json(books);
+//   } catch (err) {
+//     console.error("❌ Error fetching books:", err);
+//     res.status(500).json({ error: "Failed to fetch books" });
+//   }
+// });
 
 router.post("/", async (req, res) => {
   const { title, author } = req.body;
