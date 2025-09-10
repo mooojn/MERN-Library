@@ -12,6 +12,4 @@ app.get("/", (req, res) => {
 
 app.use("/books", bookRoutes);
 
-// export default app;
-
-app.listen(3000)
+export default app;
