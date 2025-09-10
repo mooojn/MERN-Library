@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import { book } from './models/book.js';
 
-const URI = 'mongodb://localhost:27017/Library';
+// const URI = 'mongodb://localhost:27017/Library';
+const URI = 'mongodb+srv://moojntariq_db_user:5H4oY48aZsjCTiSA@moon.yk5hjzg.mongodb.net/Library?retryWrites=true&w=majority&appName=moon';
 
 // connect once
 mongoose.connect(URI)
