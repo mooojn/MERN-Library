@@ -1,0 +1,20 @@
+.book-cards{
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 200px;
+}
+.book-card{
+    height: 140px;
+    width: 300px;
+    border: 2px solid black;
+    padding: 40px;
+    transition: all 0.1s ease-in-out;
+}
+.book-card:hover{
+    border: 3px solid black;
+    background: rgb(210, 202, 202);
+}
+.form {
+    display: flex;
+}
